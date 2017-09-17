@@ -8,14 +8,14 @@ import android.graphics.drawable.shapes.Shape;
  * Created by kavya on 17/9/17.
  */
 
-abstract class Object {
+abstract class GameObject {
     Shape shape;
     int x;
     int y;
 
     int speed = 0;
 
-    public Object(int x, int y){
+    public GameObject(int x, int y){
         this.x = x;
         this.y = y;
     }
