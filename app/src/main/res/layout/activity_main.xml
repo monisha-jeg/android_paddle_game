@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.pop.paddlegame.MainActivity">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonPlay"
+        android:background="@drawable/playnow"
+        android:layout_centerHorizontal="true" />
+
+
 </android.support.constraint.ConstraintLayout>
