@@ -14,11 +14,23 @@ public class Paddle extends GameObject {
         float top= screenHeight - 30;
 
         rectF = new RectF(left, top, left + objWidth, top + objHeight);
-        speedX = 300;
+        speedX = 0;
         speedY = 0;
     }
 
     public void bounce(){
         speedX = -speedX;
+    }
+
+    public void moveRight(){
+        speedX = 300;
+    }
+
+    public void moveLeft(){
+        speedX = -300;
+    }
+
+    public void stop(){
+        speedX = 0;
     }
 }

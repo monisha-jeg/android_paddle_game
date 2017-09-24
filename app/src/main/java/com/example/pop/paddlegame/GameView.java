@@ -1,5 +1,6 @@
 package com.example.pop.paddlegame;
 import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.content.Context;
@@ -20,12 +21,14 @@ public class GameView extends SurfaceView implements Runnable {
     SurfaceHolder ourHolder;
     Canvas canvas;
     Paint paint;
+    long fps = 17;
 
     // Up to 200 bricks
     Brick[] bricks = new Brick[200];
     int num_bricks = 0;
 
-
+    // Game paddle
+    Paddle paddle;
 
     public GameView(Context context, int screenX, int screenY){
         super(context);
@@ -34,15 +37,12 @@ public class GameView extends SurfaceView implements Runnable {
 
         ourHolder = getHolder();
         paint = new Paint();
+        paddle = new Paddle(screenX, screenY);
 
         make_bricks();
     }
 
-
-
     public void make_bricks() {
-
-
 
         int brick_width = screenX / 8;
         int brick_height = screenY / 10;
@@ -54,12 +54,8 @@ public class GameView extends SurfaceView implements Runnable {
                 bricks[num_bricks] = new Brick(row, column, brick_width, brick_height);
                 num_bricks++;
             }
-
-
         }
     }
-
-
 
     @Override
     public void run(){
@@ -71,6 +67,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update(){
+        paddle.update(fps);
 
     }
 
@@ -90,6 +87,10 @@ public class GameView extends SurfaceView implements Runnable {
                     canvas.drawRect(bricks[i].getRect(), paint);
                 }
             }
+
+            paint.setColor(Color.argb(255, 0, 255, 0));
+            // Draw the paddle
+            canvas.drawRect(paddle.getRectF(), paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
@@ -118,6 +119,23 @@ public class GameView extends SurfaceView implements Runnable {
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent){
+        switch(motionEvent.getAction() & MotionEvent.ACTION_MASK){
+            // Player has touched the screen
+            case MotionEvent.ACTION_DOWN:
+                if(motionEvent.getX() > screenX / 2){
+                    paddle.moveRight();
+                }
+                else paddle.moveLeft();
+                break;
+            case MotionEvent.ACTION_UP:
+                paddle.stop();
+                break;
+        }
+        return true;
     }
 
 }
