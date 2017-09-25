@@ -27,8 +27,8 @@ public class GameView extends SurfaceView implements Runnable {
     Brick[] bricks = new Brick[200];
     int num_bricks = 0;
 
-    // Game paddle
-    Paddle paddle;
+    // Game paddle and ball
+    Paddle paddle;Ball ball;
 
     public GameView(Context context, int screenX, int screenY){
         super(context);
@@ -38,23 +38,41 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
         paddle = new Paddle(screenX, screenY);
+        ball = new Ball(screenX, screenY);
 
-        make_bricks();
+        createBricksAndRestart();
     }
 
-    public void make_bricks() {
 
-        int brick_width = screenX / 8;
-        int brick_height = screenY / 10;
+    public void createBricksAndRestart(){
+
+        int brick_width0 = screenX / 8, brick_width1 = screenX / 11;
+        int brick_height = screenY / 13;
 
         // Build a wall of bricks
         num_bricks = 0;
-        for (int column = 0; column < 8; column++) {
-            for (int row = 0; row < 3; row++) {
-                bricks[num_bricks] = new Brick(row, column, brick_width, brick_height);
-                num_bricks++;
+        for (int row = 0; row < 5; row++) {
+            if(row%2 == 0){
+                for (int column = 0; column < 8; column++) {
+                    bricks[num_bricks] = new Brick(row, column, brick_width0, brick_height);
+                    num_bricks++;
+                }
             }
+
+            else
+            {
+                for (int column = 0; column < 11; column++) {
+                    bricks[num_bricks] = new Brick(row, column, brick_width1, brick_height);
+                    num_bricks++;
+                }
+            }
+
+
         }
+
+        // Put the ball back to the start
+        ball.reset(screenX, screenY);
+
     }
 
     @Override
@@ -68,6 +86,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
         paddle.update(fps);
+        ball.update(fps);
 
     }
 
@@ -77,20 +96,53 @@ public class GameView extends SurfaceView implements Runnable {
             canvas = ourHolder.lockCanvas();
 
             // Draw the background color
-            canvas.drawColor(Color.argb(255, 220, 220, 220));
-            // Choose the brush color for drawing
-            paint.setColor(Color.argb(255, 255, 0, 0));
+            canvas.drawColor(Color.argb(255, 0, 0, 0));
 
-            // Draw the bricks if visible
-            for (int i = 0; i < num_bricks; i++) {
-                if (bricks[i].getVisibility()) {
-                    canvas.drawRect(bricks[i].getRect(), paint);
+            // Define brush colors for bricks
+            int brick_color1 = Color.argb(255, 255, 0, 0);
+            int brick_color2 = Color.argb(255, 255, 255, 0);
+            //Draw bricks
+            int i = 0;
+            for (int row = 0; row < 5; row++) {
+                if(row%2 == 0){
+                    paint.setColor(brick_color1);
+                    for (int column = 0; column < 8; column++) {
+                        if (bricks[i].getVisibility()) {
+                            canvas.drawRect(bricks[i].getRect(), paint);
+                            i++;
+                        }
+
+                    }
                 }
+
+                else
+                {
+                    paint.setColor(brick_color2);
+                    for (int column = 0; column < 11; column++) {
+                        if (bricks[i].getVisibility()) {
+                            canvas.drawRect(bricks[i].getRect(), paint);
+                        }
+                        i++;
+                    }
+                }
+
+
             }
 
-            paint.setColor(Color.argb(255, 0, 255, 0));
+
+
+
+
             // Draw the paddle
+            paint.setColor(Color.argb(255, 0, 255, 0));
             canvas.drawRect(paddle.getRectF(), paint);
+
+            //Draw ball
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            canvas.drawRect(ball.getRect(), paint);
+
+
+
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
@@ -137,5 +189,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
         return true;
     }
+
+
 
 }
