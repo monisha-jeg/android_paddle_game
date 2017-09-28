@@ -19,7 +19,8 @@ public class GameView extends SurfaceView implements Runnable {
     // game related variables
     volatile boolean playing;
     private Thread gameThread = null;
-    private boolean isGameOver = false;
+    boolean isGameOver = false;
+    int score = 0;
 
     int screenX, screenY;
     SurfaceHolder ourHolder;
@@ -36,7 +37,7 @@ public class GameView extends SurfaceView implements Runnable {
     // Game paddle and ball
     Paddle paddle;
     Ball ball;
-    int ballRadius = 20;
+    int ballRadius = screenX / 90;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -47,7 +48,8 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
         paddle = new Paddle(screenX, screenY);
-        ball = new Ball(paddle, ballRadius);
+        ballRadius = screenX / 90;
+        ball = new Ball(paddle, ballRadius, screenX, screenY);
 
         createBricksAndRestart();
     }
@@ -100,6 +102,7 @@ public class GameView extends SurfaceView implements Runnable {
         // 1. Collision with brick
         for (int brickIndex = 0; brickIndex < num_bricks; brickIndex++) {
             if (ball.checkCollision(bricks[brickIndex])) {
+                score += 1;
                 return;
             }
         }
@@ -157,12 +160,20 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawRoundRect(ball.getRectF(), ballRadius, ballRadius, paint);
 //            canvas.drawRect(ball.getRectF(), paint);
 
-            if (isGameOver) {
-                paint.setTextSize(150);
-                paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Game over", 950, 700, paint);
-            }
+            // Write score in corner
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.BLUE);
+            paint.setTextSize(screenX/25);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("Score: " + score, 23 * screenX / 25, 19 * screenY / 20, paint);
 
+            if (isGameOver) {
+                paint.setColor(Color.WHITE);
+                paint.setTextSize(screenX / 15);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Game over!", screenX / 2, 6 * screenY / 10, paint);
+                canvas.drawText("Score: " + score, screenX / 2, 7 * screenY / 10, paint);
+            }
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }

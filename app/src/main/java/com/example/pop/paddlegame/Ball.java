@@ -12,15 +12,15 @@ public class Ball extends GameObject {
      *
      * @param paddle: Since initial ball placement depends on the paddle
      */
-    public Ball(Paddle paddle, int radius) {
+    public Ball(Paddle paddle, int radius, int screenWidth, int screenHeight) {
         super(radius, radius);
 
         // Start the ball travelling left or right randomly
         Random generator = new Random();
         if (generator.nextInt(2) == 0) {
-            speedX = 200;
-        } else speedX = -200;
-        speedY = -200;
+            speedX = screenWidth / 9;
+        } else speedX = -screenWidth / 9;
+        speedY = -screenHeight / 5;
 
         // set ball position on top of paddle
         this.reset(paddle);
@@ -32,25 +32,6 @@ public class Ball extends GameObject {
 
     public void reverseSpeedX() {
         speedX = -speedX;
-    }
-
-    public void setRandomXVelocity() {
-        Random generator = new Random();
-        int answer = generator.nextInt(2);
-
-        if (answer == 0) {
-            reverseSpeedX();
-        }
-    }
-
-    public void clearObstacleY(float y) {
-        rectF.bottom = y;
-        rectF.top = y - objHeight;
-    }
-
-    public void clearObstacleX(float x) {
-        rectF.left = x;
-        rectF.right = x + objWidth;
     }
 
     /**
@@ -88,7 +69,7 @@ public class Ball extends GameObject {
     }
 
     public boolean checkCollision(Paddle paddle) {
-        if (paddle.getRectF().bottom < this.getRectF().top
+        if (paddle.getRectF().top < this.getRectF().bottom
                 && paddle.getRectF().left < this.getRectF().right
                 && paddle.getRectF().right > this.getRectF().left) {
             // reflect ball off paddle
@@ -117,7 +98,5 @@ public class Ball extends GameObject {
             return false;
         }
         return true;
-
     }
-
 }
