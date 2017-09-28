@@ -1,12 +1,12 @@
 package com.example.pop.paddlegame;
 
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 
 
 /**
@@ -14,9 +14,11 @@ import android.graphics.Paint;
  */
 
 public class GameView extends SurfaceView implements Runnable {
-    volatile boolean playing;
 
+    // game related variables
+    volatile boolean playing;
     private Thread gameThread = null;
+    private boolean isGameOver = false;
 
     int screenX, screenY;
     SurfaceHolder ourHolder;
@@ -27,6 +29,8 @@ public class GameView extends SurfaceView implements Runnable {
     // Up to 200 bricks
     Brick[] bricks = new Brick[200];
     int num_bricks = 0;
+    int numberBricks1 = 8;
+    int numberBricks2 = 11;
 
     // Game paddle and ball
     Paddle paddle;
@@ -34,6 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
+        isGameOver = false;
         this.screenX = screenX;
         this.screenY = screenY;
 
@@ -45,31 +50,29 @@ public class GameView extends SurfaceView implements Runnable {
         createBricksAndRestart();
     }
 
-
     public void createBricksAndRestart() {
 
-        int brick_width0 = screenX / 8, brick_width1 = screenX / 11;
-        int brick_height = screenY / 13;
+        int brickWidth1 = screenX / numberBricks1, brickWidth2 = screenX / numberBricks2;
+        int brickHeight = screenY / 13;
 
         // Build a wall of bricks
         num_bricks = 0;
         for (int row = 0; row < 5; row++) {
             if (row % 2 == 0) {
-                for (int column = 0; column < 8; column++) {
-                    bricks[num_bricks] = new Brick(row, column, brick_width0, brick_height);
+                for (int column = 0; column < numberBricks1; column++) {
+                    bricks[num_bricks] = new Brick(row, column, brickWidth1, brickHeight);
                     num_bricks++;
                 }
             } else {
-                for (int column = 0; column < 11; column++) {
-                    bricks[num_bricks] = new Brick(row, column, brick_width1, brick_height);
+                for (int column = 0; column < numberBricks2; column++) {
+                    bricks[num_bricks] = new Brick(row, column, brickWidth2, brickHeight);
                     num_bricks++;
                 }
             }
         }
 
-        // Put the ball back to the start
+        // Reset ball position
         ball.reset(paddle);
-
     }
 
     @Override
@@ -81,9 +84,33 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    /**
+     * Helper function which updates all game objects
+     * Checks collision of ball.
+     * Moves paddle as required
+     * Removes bricks from game if ball has touched them
+     */
     private void update() {
         paddle.update(fps);
         ball.update(fps);
+
+        // Check collision of ball with brick, wall or paddle
+        // 1. Collision with brick
+        for (int brickIndex = 0; brickIndex < num_bricks; brickIndex++) {
+            if (ball.checkCollision(bricks[brickIndex])) {
+                return;
+            }
+        }
+        // 2. Collision with paddle
+        if (ball.checkCollision(paddle)) {
+            return;
+        }
+        // 3. Collision with screen wall top, left or right.
+        // Collision with bottom is counted as game over
+        if (!ball.collideWithWall(screenX, screenY)) {
+            playing = false;
+            isGameOver = true;
+        }
     }
 
     public void draw() {
@@ -97,29 +124,26 @@ public class GameView extends SurfaceView implements Runnable {
             // Define brush colors for bricks
             int brick_color1 = Color.argb(255, 255, 0, 0);
             int brick_color2 = Color.argb(255, 255, 255, 0);
-            //Draw bricks
+            // Draw bricks
             int i = 0;
             for (int row = 0; row < 5; row++) {
                 if (row % 2 == 0) {
                     paint.setColor(brick_color1);
-                    for (int column = 0; column < 8; column++) {
+                    for (int column = 0; column < numberBricks1; column++) {
                         if (bricks[i].getVisibility()) {
                             canvas.drawRect(bricks[i].getRectF(), paint);
-                            i++;
                         }
-
+                        i++;
                     }
                 } else {
                     paint.setColor(brick_color2);
-                    for (int column = 0; column < 11; column++) {
+                    for (int column = 0; column < numberBricks2; column++) {
                         if (bricks[i].getVisibility()) {
                             canvas.drawRect(bricks[i].getRectF(), paint);
                         }
                         i++;
                     }
                 }
-
-
             }
 
             // Draw the paddle
@@ -129,6 +153,12 @@ public class GameView extends SurfaceView implements Runnable {
             //Draw ball
             paint.setColor(Color.argb(255, 255, 255, 255));
             canvas.drawRect(ball.getRectF(), paint);
+
+            if (isGameOver) {
+                paint.setTextSize(150);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Game over", 200, 200, paint);
+            }
 
             ourHolder.unlockCanvasAndPost(canvas);
         }

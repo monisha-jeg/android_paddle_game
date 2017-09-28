@@ -4,8 +4,6 @@ package com.example.pop.paddlegame;
  * Created by moni on 25/9/17.
  */
 
-import android.graphics.RectF;
-
 import java.util.Random;
 
 public class Ball extends GameObject {
@@ -17,19 +15,22 @@ public class Ball extends GameObject {
     public Ball(Paddle paddle) {
         super(20, 20);
 
-        // Start the ball travelling straight up at 100 pixels per second
-//        speedX = 200;
-//        speedY = -400;
+        // Start the ball travelling left or right randomly
+        Random generator = new Random();
+        if (generator.nextInt(2) == 0) {
+            speedX = 200;
+        } else speedX = -200;
+        speedY = -200;
 
         // set ball position on top of paddle
         this.reset(paddle);
     }
 
-    public void reverseYVelocity() {
+    public void reverseSpeedY() {
         speedY = -speedY;
     }
 
-    public void reverseXVelocity() {
+    public void reverseSpeedX() {
         speedX = -speedX;
     }
 
@@ -38,7 +39,7 @@ public class Ball extends GameObject {
         int answer = generator.nextInt(2);
 
         if (answer == 0) {
-            reverseXVelocity();
+            reverseSpeedX();
         }
     }
 
@@ -63,6 +64,60 @@ public class Ball extends GameObject {
 
         // Placing the ball at the top of the paddle
         setRectF(left, bottom - objHeight);
+    }
+
+    /**
+     * Function to check Collision of ball with a brick
+     *
+     * @param brick
+     * @return True if ball has collided and false if it has not
+     */
+    public boolean checkCollision(Brick brick) {
+        // Do only if brick is in game => is visible
+        if (brick.getVisibility()) {
+            // check intersection of ball and brick
+            if (brick.getRectF().intersect(this.getRectF())) {
+                // remove brick from game
+                brick.setInvisible();
+                // change course of ball
+                this.reverseSpeedY();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkCollision(Paddle paddle) {
+        if (paddle.getRectF().bottom < this.getRectF().top
+                && paddle.getRectF().left < this.getRectF().right
+                && paddle.getRectF().right > this.getRectF().left) {
+            // reflect ball off paddle
+            this.reverseSpeedY();
+        }
+        return false;
+    }
+
+    /**
+     * Function which checks if ball collides with a wall and redirects it as necessary
+     *
+     * @param screenX
+     * @param screenY
+     * @return True if collision is valid, false if it collides with bottom wall in which case
+     * game is over.
+     */
+    public boolean collideWithWall(int screenX, int screenY) {
+        if (this.getRectF().left <= 0) {
+            this.reverseSpeedX();
+        } else if (this.getRectF().right >= screenX) {
+            this.reverseSpeedX();
+        } else if (this.getRectF().top <= 0) {
+            this.reverseSpeedY();
+        } else if (this.getRectF().bottom >= screenY) {
+            // ball has fallen down, so game is over
+            return false;
+        }
+        return true;
+
     }
 
 }
