@@ -1,43 +1,33 @@
 package com.example.pop.paddlegame;
+
 import android.graphics.RectF;
 
 /**
  * Created by moni on 19/9/17.
  */
 
-public class Brick {
+public class Brick extends GameObject{
 
-    private RectF rect;
+   // using this variable to not display after ball has touched a brick
     private boolean isVisible;
 
-    public Brick(int row, int column, int width, int height)
-    {
-
+    public Brick(int row, int column, int width, int height) {
+        super(height, width);
         isVisible = true;
 
         int padding = 1;
 
-        rect = new RectF(column * width + padding,
+        rectF = new RectF(column * width + padding,
                 row * height + padding,
                 column * width + width - padding,
                 row * height + height - padding);
     }
 
-    public RectF getRect(){
-        return this.rect;
-    }
-
-    public void setInvisible(){
+    public void setInvisible() {
         isVisible = false;
     }
 
-    public boolean getVisibility(){
+    public boolean getVisibility() {
         return isVisible;
     }
-    }
-
-
-
-
-
-
+}

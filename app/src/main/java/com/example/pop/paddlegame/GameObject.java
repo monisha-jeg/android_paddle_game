@@ -21,22 +21,27 @@ abstract class GameObject {
     float objHeight;
     float objWidth;
 
-    public GameObject(int height, int width){
+    public GameObject(int height, int width) {
         objHeight = height;
         objWidth = width;
         rectF = new RectF();
+        speedX = 0;
+        speedY = 0;
     }
 
-    public void update(long fps){
-        rectF.left = rectF.left + speedX/fps;
-        rectF.top = rectF.top + speedY/fps;
+    public void update(long fps) {
+        rectF.left = rectF.left + speedX / fps;
+        rectF.top = rectF.top + speedY / fps;
         rectF.right = rectF.left + objWidth;
         rectF.bottom = rectF.top - objHeight;
     }
 
-    public RectF getRectF(){
+    public RectF getRectF() {
         return this.rectF;
     }
 
-    public void reset(){};
+    public void reset() {
+    }
+
+    ;
 }

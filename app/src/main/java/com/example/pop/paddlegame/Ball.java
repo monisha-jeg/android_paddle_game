@@ -8,68 +8,61 @@ import android.graphics.RectF;
 
 import java.util.Random;
 
-public class Ball {
-    RectF rect;
-    float xVelocity;
-    float yVelocity;
-    float ballWidth = 20;
-    float ballHeight = 20;
-
-    public Ball(int screenX, int screenY){
+public class Ball extends GameObject {
+    /**
+     * Constructor for the ball object
+     *
+     * @param paddle: Since initial ball placement depends on the paddle
+     */
+    public Ball(Paddle paddle) {
+        super(20, 20);
 
         // Start the ball travelling straight up at 100 pixels per second
-        xVelocity = 200;
-        yVelocity = -400;
+//        speedX = 200;
+//        speedY = -400;
 
-        // Place the ball in the centre of the screen at the bottom
-        // Make it a 10 pixel x 10 pixel square
-        rect = new RectF();
-
+        // set ball position on top of paddle
+        this.reset(paddle);
     }
 
-    public RectF getRect(){
-        return rect;
+    public void reverseYVelocity() {
+        speedY = -speedY;
     }
 
-    public void update(long fps){
-        rect.left = rect.left + (xVelocity / fps);
-        rect.top = rect.top + (yVelocity / fps);
-        rect.right = rect.left + ballWidth;
-        rect.bottom = rect.top - ballHeight;
+    public void reverseXVelocity() {
+        speedX = -speedX;
     }
 
-    public void reverseYVelocity(){
-        yVelocity = -yVelocity;
-    }
-
-    public void reverseXVelocity(){
-        xVelocity = - xVelocity;
-    }
-
-    public void setRandomXVelocity(){
+    public void setRandomXVelocity() {
         Random generator = new Random();
         int answer = generator.nextInt(2);
 
-        if(answer == 0){
+        if (answer == 0) {
             reverseXVelocity();
         }
     }
 
-    public void clearObstacleY(float y){
-        rect.bottom = y;
-        rect.top = y - ballHeight;
+    public void clearObstacleY(float y) {
+        rectF.bottom = y;
+        rectF.top = y - objHeight;
     }
 
-    public void clearObstacleX(float x){
-        rect.left = x;
-        rect.right = x + ballWidth;
+    public void clearObstacleX(float x) {
+        rectF.left = x;
+        rectF.right = x + objWidth;
     }
 
-    public void reset(int x, int y){
-        rect.left = x / 2;
-        rect.top = y - 20;
-        rect.right = x / 2 + ballWidth;
-        rect.bottom = y - 20 - ballHeight;
+    /**
+     * Resets the ball to start position, which is on top of the paddle
+     *
+     * @param paddle
+     */
+    public void reset(Paddle paddle) {
+        float left = (paddle.getRectF().left + paddle.getRectF().right) / 2 - objWidth / 2;
+        float bottom = paddle.getRectF().top;
+
+        // Placing the ball at the top of the paddle
+        rectF = new RectF(left, bottom - objHeight, left + objWidth, bottom);
     }
 
 }

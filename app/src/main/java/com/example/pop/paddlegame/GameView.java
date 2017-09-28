@@ -1,4 +1,5 @@
 package com.example.pop.paddlegame;
+
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -28,9 +29,10 @@ public class GameView extends SurfaceView implements Runnable {
     int num_bricks = 0;
 
     // Game paddle and ball
-    Paddle paddle;Ball ball;
+    Paddle paddle;
+    Ball ball;
 
-    public GameView(Context context, int screenX, int screenY){
+    public GameView(Context context, int screenX, int screenY) {
         super(context);
         this.screenX = screenX;
         this.screenY = screenY;
@@ -38,13 +40,13 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
         paddle = new Paddle(screenX, screenY);
-        ball = new Ball(screenX, screenY);
+        ball = new Ball(paddle);
 
         createBricksAndRestart();
     }
 
 
-    public void createBricksAndRestart(){
+    public void createBricksAndRestart() {
 
         int brick_width0 = screenX / 8, brick_width1 = screenX / 11;
         int brick_height = screenY / 13;
@@ -52,45 +54,39 @@ public class GameView extends SurfaceView implements Runnable {
         // Build a wall of bricks
         num_bricks = 0;
         for (int row = 0; row < 5; row++) {
-            if(row%2 == 0){
+            if (row % 2 == 0) {
                 for (int column = 0; column < 8; column++) {
                     bricks[num_bricks] = new Brick(row, column, brick_width0, brick_height);
                     num_bricks++;
                 }
-            }
-
-            else
-            {
+            } else {
                 for (int column = 0; column < 11; column++) {
                     bricks[num_bricks] = new Brick(row, column, brick_width1, brick_height);
                     num_bricks++;
                 }
             }
-
-
         }
 
         // Put the ball back to the start
-        ball.reset(screenX, screenY);
+        ball.reset(paddle);
 
     }
 
     @Override
-    public void run(){
-        while(playing){
+    public void run() {
+        while (playing) {
             update();
             draw();
             control();
         }
     }
 
-    private void update(){
+    private void update() {
         paddle.update(fps);
         ball.update(fps);
-
     }
 
-    public void draw(){
+    public void draw() {
 
         if (ourHolder.getSurface().isValid()) {
             canvas = ourHolder.lockCanvas();
@@ -104,23 +100,20 @@ public class GameView extends SurfaceView implements Runnable {
             //Draw bricks
             int i = 0;
             for (int row = 0; row < 5; row++) {
-                if(row%2 == 0){
+                if (row % 2 == 0) {
                     paint.setColor(brick_color1);
                     for (int column = 0; column < 8; column++) {
                         if (bricks[i].getVisibility()) {
-                            canvas.drawRect(bricks[i].getRect(), paint);
+                            canvas.drawRect(bricks[i].getRectF(), paint);
                             i++;
                         }
 
                     }
-                }
-
-                else
-                {
+                } else {
                     paint.setColor(brick_color2);
                     for (int column = 0; column < 11; column++) {
                         if (bricks[i].getVisibility()) {
-                            canvas.drawRect(bricks[i].getRect(), paint);
+                            canvas.drawRect(bricks[i].getRectF(), paint);
                         }
                         i++;
                     }
@@ -129,59 +122,49 @@ public class GameView extends SurfaceView implements Runnable {
 
             }
 
-
-
-
-
             // Draw the paddle
             paint.setColor(Color.argb(255, 0, 255, 0));
             canvas.drawRect(paddle.getRectF(), paint);
 
             //Draw ball
             paint.setColor(Color.argb(255, 255, 255, 255));
-            canvas.drawRect(ball.getRect(), paint);
-
-
-
+            canvas.drawRect(ball.getRectF(), paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
 
-    public void control(){
-        try{
+    public void control() {
+        try {
             gameThread.sleep(10);
-        }
-        catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void pause(){
+    public void pause() {
         playing = false;
         try {
             gameThread.join();
-        }
-        catch(InterruptedException e){
+        } catch (InterruptedException e) {
 
         }
     }
 
-    public void resume(){
+    public void resume() {
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent){
-        switch(motionEvent.getAction() & MotionEvent.ACTION_MASK){
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                if(motionEvent.getX() > screenX / 2){
+                if (motionEvent.getX() > screenX / 2) {
                     paddle.moveRight();
-                }
-                else paddle.moveLeft();
+                } else paddle.moveLeft();
                 break;
             case MotionEvent.ACTION_UP:
                 paddle.stop();
@@ -189,7 +172,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
         return true;
     }
-
 
 
 }
