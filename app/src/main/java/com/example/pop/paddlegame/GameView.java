@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.List;
+
 
 /**
  * Created by kavya on 17/9/17.
@@ -26,13 +28,14 @@ public class GameView extends SurfaceView implements Runnable {
     SurfaceHolder ourHolder;
     Canvas canvas;
     Paint paint;
-    long fps = 17;
+    long fps = 20;
 
     // Up to 200 bricks
     Brick[] bricks = new Brick[200];
     int num_bricks = 0;
     int numberBricks1 = 8;
     int numberBricks2 = 11;
+    int numberRows = 4;
 
     // Game paddle and ball
     Paddle paddle;
@@ -61,7 +64,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         // Build a wall of bricks
         num_bricks = 0;
-        for (int row = 0; row < 5; row++) {
+        for (int row = 1; row <= numberRows; row++) {
             if (row % 2 == 0) {
                 for (int column = 0; column < numberBricks1; column++) {
                     bricks[num_bricks] = new Brick(row, column, brickWidth1, brickHeight);
@@ -103,6 +106,11 @@ public class GameView extends SurfaceView implements Runnable {
         for (int brickIndex = 0; brickIndex < num_bricks; brickIndex++) {
             if (ball.checkCollision(bricks[brickIndex])) {
                 score += 1;
+                if(score == num_bricks){
+                    // All the blocks have been cleared.
+                    playing = false;
+                    isGameOver = true;
+                }
                 return;
             }
         }
@@ -131,7 +139,7 @@ public class GameView extends SurfaceView implements Runnable {
             int brick_color2 = Color.argb(255, 255, 255, 0);
             // Draw bricks
             int i = 0;
-            for (int row = 0; row < 5; row++) {
+            for (int row = 1; row <= numberRows; row++) {
                 if (row % 2 == 0) {
                     paint.setColor(brick_color1);
                     for (int column = 0; column < numberBricks1; column++) {
@@ -163,7 +171,7 @@ public class GameView extends SurfaceView implements Runnable {
             // Write score in corner
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.BLUE);
-            paint.setTextSize(screenX/25);
+            paint.setTextSize(screenX / 25);
             paint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText("Score: " + score, 23 * screenX / 25, 19 * screenY / 20, paint);
 
@@ -171,8 +179,16 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(screenX / 15);
                 paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Game over!", screenX / 2, 6 * screenY / 10, paint);
-                canvas.drawText("Score: " + score, screenX / 2, 7 * screenY / 10, paint);
+                if(score == num_bricks){
+                    paint.setColor(Color.GREEN);
+                    canvas.drawText("Congratulations!", screenX/2, 4*screenY/10, paint);
+                    canvas.drawText("You have cleared", screenX/2, 5*screenY/10, paint);
+                    canvas.drawText("all bricks", screenX/2, 6*screenY/10, paint);
+                }
+                else {
+                    canvas.drawText("Game over!", screenX / 2, 6 * screenY / 10, paint);
+                    canvas.drawText("Score: " + score, screenX / 2, 7 * screenY / 10, paint);
+                }
             }
             ourHolder.unlockCanvasAndPost(canvas);
         }
