@@ -18,8 +18,8 @@ public class Ball extends GameObject {
         // Start the ball travelling left or right randomly
         Random generator = new Random();
         if (generator.nextInt(2) == 0) {
-            speedX = screenWidth / 9;
-        } else speedX = -screenWidth / 9;
+            speedX = screenWidth / 6;
+        } else speedX = -screenWidth / 5;
         speedY = -screenHeight / 5;
 
         // set ball position on top of paddle

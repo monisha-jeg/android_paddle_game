@@ -8,11 +8,11 @@ public class Paddle extends GameObject {
     int speedMax;
 
     public Paddle(int screenWidth, int screenHeight) {
-        super(screenWidth / 80, screenHeight / 8);
+        super(screenHeight / 50, screenWidth / 8);
 
         // Placing paddle with left side in the middle of the screen
         float left = screenWidth / 2 - objWidth / 2;
-        float top = screenHeight - screenHeight / 80;
+        float top = screenHeight - screenHeight / 45;
         setRectF(left, top);
 
         // setting speeds and movement

@@ -40,7 +40,7 @@ public class GameView extends SurfaceView implements Runnable {
     // Game paddle and ball
     Paddle paddle;
     Ball ball;
-    int ballRadius = screenX / 90;
+    int ballRadius;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -51,7 +51,7 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
         paddle = new Paddle(screenX, screenY);
-        ballRadius = screenX / 90;
+        ballRadius = screenX / 70;
         ball = new Ball(paddle, ballRadius, screenX, screenY);
 
         createBricksAndRestart();
