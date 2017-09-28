@@ -19,7 +19,7 @@ public class Paddle extends GameObject {
         setRectF(left, top);
 
         // setting speeds and movement
-        speedX = 400;
+        speedX = 0;
         speedY = 0;
 
         // setting limit on right side movement
