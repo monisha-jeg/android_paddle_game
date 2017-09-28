@@ -6,9 +6,9 @@ import android.graphics.RectF;
  * Created by moni on 19/9/17.
  */
 
-public class Brick extends GameObject{
+public class Brick extends GameObject {
 
-   // using this variable to not display after ball has touched a brick
+    // using this variable to not display after ball has touched a brick
     private boolean isVisible;
 
     public Brick(int row, int column, int width, int height) {
