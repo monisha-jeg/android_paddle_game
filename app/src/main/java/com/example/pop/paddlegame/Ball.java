@@ -62,7 +62,7 @@ public class Ball extends GameObject {
         float bottom = paddle.getRectF().top;
 
         // Placing the ball at the top of the paddle
-        rectF = new RectF(left, bottom - objHeight, left + objWidth, bottom);
+        setRectF(left, bottom - objHeight);
     }
 
 }
