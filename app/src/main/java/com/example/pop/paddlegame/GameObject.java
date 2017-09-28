@@ -7,6 +7,7 @@ import android.graphics.drawable.shapes.Shape;
 
 import static android.R.attr.x;
 import static android.R.attr.y;
+import static android.view.View.X;
 
 /**
  * Created by kavya on 17/9/17.
@@ -43,5 +44,8 @@ abstract class GameObject {
     public void reset() {
     }
 
-    ;
+    public void setRectF(float left, float top){
+        rectF = new RectF(left, top, left + objWidth, top + objHeight);
+    }
+
 }
