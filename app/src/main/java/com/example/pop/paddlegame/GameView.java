@@ -192,16 +192,15 @@ public class GameView extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                if (motionEvent.getX() > screenX / 2) {
-                    paddle.moveRight();
-                } else paddle.moveLeft();
+                float paddleMid = (paddle.getRectF().left + paddle.getRectF().right)/2;
+                if (motionEvent.getX() > paddleMid) {
+                    paddle.movePaddle(1);
+                } else paddle.movePaddle(2);
                 break;
             case MotionEvent.ACTION_UP:
-                paddle.stop();
+                paddle.movePaddle(0);
                 break;
         }
         return true;
     }
-
-
 }
