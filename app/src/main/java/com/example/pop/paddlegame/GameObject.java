@@ -34,7 +34,7 @@ abstract class GameObject {
         rectF.left = rectF.left + speedX / fps;
         rectF.top = rectF.top + speedY / fps;
         rectF.right = rectF.left + objWidth;
-        rectF.bottom = rectF.top - objHeight;
+        rectF.bottom = rectF.top + objHeight;
     }
 
     public RectF getRectF() {
