@@ -15,17 +15,18 @@ public class Paddle extends GameObject {
         float left = screenWidth / 2 - objWidth/2;
         float top = screenHeight - 30;
 
-        rectF = new RectF(left, top, left + objWidth, top + objHeight);
+        setRectF(left, top);
+
         speedX = 0;
         speedY = 0;
     }
 
     public void moveRight() {
-        speedX = 300;
+        speedX = 400;
     }
 
     public void moveLeft() {
-        speedX = -300;
+        speedX = -400;
     }
 
     public void stop() {
