@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,6 +36,7 @@ public class GameView extends SurfaceView implements Runnable {
     // Game paddle and ball
     Paddle paddle;
     Ball ball;
+    int ballRadius = 20;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -45,7 +47,7 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
         paddle = new Paddle(screenX, screenY);
-        ball = new Ball(paddle);
+        ball = new Ball(paddle, ballRadius);
 
         createBricksAndRestart();
     }
@@ -150,14 +152,15 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.argb(255, 0, 255, 0));
             canvas.drawRect(paddle.getRectF(), paint);
 
-            //Draw ball
+            // Draw ball
             paint.setColor(Color.argb(255, 255, 255, 255));
-            canvas.drawRect(ball.getRectF(), paint);
+            canvas.drawRoundRect(ball.getRectF(), ballRadius, ballRadius, paint);
+//            canvas.drawRect(ball.getRectF(), paint);
 
             if (isGameOver) {
                 paint.setTextSize(150);
                 paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Game over", 200, 200, paint);
+                canvas.drawText("Game over", 950, 700, paint);
             }
 
             ourHolder.unlockCanvasAndPost(canvas);
@@ -192,7 +195,7 @@ public class GameView extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                float paddleMid = (paddle.getRectF().left + paddle.getRectF().right)/2;
+                float paddleMid = (paddle.getRectF().left + paddle.getRectF().right) / 2;
                 if (motionEvent.getX() > paddleMid) {
                     paddle.movePaddle(1);
                 } else paddle.movePaddle(2);

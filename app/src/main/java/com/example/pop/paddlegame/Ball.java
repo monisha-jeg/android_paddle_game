@@ -12,8 +12,8 @@ public class Ball extends GameObject {
      *
      * @param paddle: Since initial ball placement depends on the paddle
      */
-    public Ball(Paddle paddle) {
-        super(20, 20);
+    public Ball(Paddle paddle, int radius) {
+        super(radius, radius);
 
         // Start the ball travelling left or right randomly
         Random generator = new Random();
