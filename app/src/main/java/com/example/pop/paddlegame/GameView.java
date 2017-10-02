@@ -27,6 +27,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread = null;
     boolean isGameOver = false;
     int score = 0;
+    int lives = 3;
 
     int screenX, screenY;
     SurfaceHolder ourHolder;
@@ -49,6 +50,7 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context, int screenX, int screenY) {
         super(context);
         isGameOver = false;
+        playing = false;
         this.screenX = screenX;
         this.screenY = screenY;
 
@@ -141,8 +143,14 @@ public class GameView extends SurfaceView implements Runnable {
         // 3. Collision with screen wall top, left or right.
         // Collision with bottom is counted as game over
         if (!ball.collideWithWall(screenX, screenY)) {
-            playing = false;
-            isGameOver = true;
+            lives--;
+            if(lives == 0) {
+                playing = false;
+                isGameOver = true;
+            }
+            paddle.reset();
+            ball.reset(paddle);
+            this.pause();
         }
     }
 
@@ -186,7 +194,14 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawRoundRect(ball.getRectF(), ballRadius, ballRadius, paint);
 //            canvas.drawRect(ball.getRectF(), paint);
 
-            // Write score in corner
+            // Write number of lives in left corner
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.RED);
+            paint.setTextSize(screenX / 25);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("Lives: " + lives, 3 * screenX / 25, 19 * screenY / 20, paint);
+
+            // Write score in right corner
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.BLUE);
             paint.setTextSize(screenX / 25);
@@ -240,11 +255,14 @@ public class GameView extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                float paddleMid = (paddle.getRectF().left + paddle.getRectF().right) / 2;
-                if (motionEvent.getX() > paddleMid) {
-                    paddle.movePaddle(1);
-                } else paddle.movePaddle(2);
-                break;
+                if(!isGameOver) {
+                    this.resume();
+                    float paddleMid = (paddle.getRectF().left + paddle.getRectF().right) / 2;
+                    if (motionEvent.getX() > paddleMid) {
+                        paddle.movePaddle(1);
+                    } else paddle.movePaddle(2);
+                    break;
+                }
             case MotionEvent.ACTION_UP:
                 paddle.movePaddle(0);
                 break;
