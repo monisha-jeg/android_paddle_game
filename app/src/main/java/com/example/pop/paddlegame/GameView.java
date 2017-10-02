@@ -9,7 +9,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static android.graphics.Color.MAGENTA;
 
 
 /**
@@ -33,9 +37,9 @@ public class GameView extends SurfaceView implements Runnable {
     // Up to 200 bricks
     Brick[] bricks = new Brick[200];
     int num_bricks = 0;
-    int numberBricks1 = 8;
-    int numberBricks2 = 11;
-    int numberRows = 4;
+    int numberBricks1;
+    int numberBricks2;
+    int numberRows;
 
     // Game paddle and ball
     Paddle paddle;
@@ -47,6 +51,12 @@ public class GameView extends SurfaceView implements Runnable {
         isGameOver = false;
         this.screenX = screenX;
         this.screenY = screenY;
+
+        Random random = new Random();
+
+        numberBricks1 = 7 + random.nextInt(6);
+        numberBricks2 = 7 + random.nextInt(6);
+        numberRows = 4 + random.nextInt(2);
 
         ourHolder = getHolder();
         paint = new Paint();
@@ -62,17 +72,27 @@ public class GameView extends SurfaceView implements Runnable {
         int brickWidth1 = screenX / numberBricks1, brickWidth2 = screenX / numberBricks2;
         int brickHeight = screenY / 13;
 
+        Random random = new Random();
+
+        List<Integer> colors = new ArrayList<>();
+        colors.add(Color.MAGENTA);
+        colors.add(Color.BLUE);
+        colors.add(Color.CYAN);
+        colors.add(Color.YELLOW);
+
         // Build a wall of bricks
         num_bricks = 0;
         for (int row = 1; row <= numberRows; row++) {
             if (row % 2 == 0) {
                 for (int column = 0; column < numberBricks1; column++) {
-                    bricks[num_bricks] = new Brick(row, column, brickWidth1, brickHeight);
+                    int color = random.nextInt(2);
+                    bricks[num_bricks] = new Brick(row, column, brickWidth1, brickHeight, colors.get(color));
                     num_bricks++;
                 }
             } else {
                 for (int column = 0; column < numberBricks2; column++) {
-                    bricks[num_bricks] = new Brick(row, column, brickWidth2, brickHeight);
+                    int color = 2 + random.nextInt(2);
+                    bricks[num_bricks] = new Brick(row, column, brickWidth2, brickHeight, colors.get(color));
                     num_bricks++;
                 }
             }
@@ -135,23 +155,21 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawColor(Color.argb(255, 0, 0, 0));
 
             // Define brush colors for bricks
-            int brick_color1 = Color.argb(255, 255, 0, 0);
-            int brick_color2 = Color.argb(255, 255, 255, 0);
             // Draw bricks
             int i = 0;
             for (int row = 1; row <= numberRows; row++) {
                 if (row % 2 == 0) {
-                    paint.setColor(brick_color1);
                     for (int column = 0; column < numberBricks1; column++) {
                         if (bricks[i].getVisibility()) {
+                            paint.setColor(bricks[i].color);
                             canvas.drawRect(bricks[i].getRectF(), paint);
                         }
                         i++;
                     }
                 } else {
-                    paint.setColor(brick_color2);
                     for (int column = 0; column < numberBricks2; column++) {
                         if (bricks[i].getVisibility()) {
+                            paint.setColor(bricks[i].color);
                             canvas.drawRect(bricks[i].getRectF(), paint);
                         }
                         i++;
@@ -160,11 +178,11 @@ public class GameView extends SurfaceView implements Runnable {
             }
 
             // Draw the paddle
-            paint.setColor(Color.argb(255, 0, 255, 0));
+            paint.setColor(paddle.color);
             canvas.drawRect(paddle.getRectF(), paint);
 
             // Draw ball
-            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setColor(ball.color);
             canvas.drawRoundRect(ball.getRectF(), ballRadius, ballRadius, paint);
 //            canvas.drawRect(ball.getRectF(), paint);
 

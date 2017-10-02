@@ -46,11 +46,7 @@ public class GameActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        startActivity(intent);
-                        intent.addCategory(Intent.CATEGORY_HOME);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        finish();
+                        GameActivity.super.onBackPressed();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

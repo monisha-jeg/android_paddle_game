@@ -11,8 +11,8 @@ public class Brick extends GameObject {
     // using this variable to not display after ball has touched a brick
     private boolean isVisible;
 
-    public Brick(int row, int column, int width, int height) {
-        super(height, width);
+    public Brick(int row, int column, int width, int height, int color) {
+        super(height, width, color);
         isVisible = true;
 
         int padding = 1;

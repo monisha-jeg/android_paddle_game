@@ -1,5 +1,7 @@
 package com.example.pop.paddlegame;
 
+import android.graphics.Color;
+
 /**
  * Created by kavya on 17/9/17.
  */
@@ -8,7 +10,7 @@ public class Paddle extends GameObject {
     int speedMax;
 
     public Paddle(int screenWidth, int screenHeight) {
-        super(screenHeight / 50, screenWidth / 8);
+        super(screenHeight / 50, screenWidth / 8, Color.GREEN);
 
         // Placing paddle with left side in the middle of the screen
         float left = screenWidth / 2 - objWidth / 2;

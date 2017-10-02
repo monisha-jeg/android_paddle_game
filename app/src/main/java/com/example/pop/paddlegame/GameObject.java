@@ -5,6 +5,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
+import static android.R.attr.width;
 import static android.R.attr.x;
 import static android.R.attr.y;
 import static android.view.View.X;
@@ -22,12 +23,15 @@ abstract class GameObject {
     float objHeight;
     float objWidth;
 
-    public GameObject(int height, int width) {
+    public int color;
+
+    public GameObject(int height, int width, int color) {
         objHeight = height;
         objWidth = width;
         rectF = new RectF();
         speedX = 0;
         speedY = 0;
+        this.color = color;
     }
 
     public void update(long fps) {

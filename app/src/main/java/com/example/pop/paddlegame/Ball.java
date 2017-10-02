@@ -4,6 +4,8 @@ package com.example.pop.paddlegame;
  * Created by moni on 25/9/17.
  */
 
+import android.graphics.Color;
+
 import java.util.Random;
 
 public class Ball extends GameObject {
@@ -13,7 +15,7 @@ public class Ball extends GameObject {
      * @param paddle: Since initial ball placement depends on the paddle
      */
     public Ball(Paddle paddle, int radius, int screenWidth, int screenHeight) {
-        super(radius, radius);
+        super(radius, radius, Color.WHITE);
 
         // Start the ball travelling left or right randomly
         Random generator = new Random();
