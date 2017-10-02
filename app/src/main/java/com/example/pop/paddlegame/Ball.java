@@ -15,7 +15,7 @@ public class Ball extends GameObject {
      * @param paddle: Since initial ball placement depends on the paddle
      */
     public Ball(Paddle paddle, int radius, int screenWidth, int screenHeight) {
-        super(radius, radius, Color.WHITE);
+        super(radius, radius, Color.argb(255, 255, 127, 0));
 
         // Start the ball travelling left or right randomly
         Random generator = new Random();

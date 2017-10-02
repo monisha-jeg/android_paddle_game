@@ -74,10 +74,10 @@ public class GameView extends SurfaceView implements Runnable {
         Random random = new Random();
 
         List<Integer> colors = new ArrayList<>();
-        colors.add(Color.MAGENTA);
-        colors.add(Color.BLUE);
-        colors.add(Color.CYAN);
-        colors.add(Color.YELLOW);
+        colors.add(Color.argb(255, 197, 163, 214));
+        colors.add(Color.argb(255, 100, 149, 237));
+        colors.add(Color.argb(255, 131, 91, 59));
+        colors.add(Color.argb(255, 0, 128, 128));
 
         // Build a wall of bricks
         num_bricks = 0;

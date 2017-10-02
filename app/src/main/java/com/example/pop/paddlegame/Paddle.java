@@ -10,7 +10,7 @@ public class Paddle extends GameObject {
     int speedMax;
 
     public Paddle(int screenWidth, int screenHeight) {
-        super(screenHeight / 50, screenWidth / 8, Color.GREEN);
+        super(screenHeight / 50, screenWidth / 8, Color.argb(255, 0, 180, 0));
 
         // Placing paddle with left side in the middle of the screen
         float left = screenWidth / 2 - objWidth / 2;

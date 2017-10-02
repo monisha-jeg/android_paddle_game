@@ -15,7 +15,7 @@ public class Brick extends GameObject {
         super(height, width, color);
         isVisible = true;
 
-        int padding = 1;
+        int padding = width/25;
 
         rectF = new RectF(column * width + padding,
                 row * height + padding,
