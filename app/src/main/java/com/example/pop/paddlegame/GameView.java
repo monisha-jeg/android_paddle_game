@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -12,8 +11,6 @@ import android.view.SurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static android.graphics.Color.MAGENTA;
 
 
 /**
@@ -128,7 +125,7 @@ public class GameView extends SurfaceView implements Runnable {
         for (int brickIndex = 0; brickIndex < num_bricks; brickIndex++) {
             if (ball.checkCollision(bricks[brickIndex])) {
                 score += 1;
-                if(score == num_bricks){
+                if (score == num_bricks) {
                     // All the blocks have been cleared.
                     playing = false;
                     isGameOver = true;
@@ -144,7 +141,7 @@ public class GameView extends SurfaceView implements Runnable {
         // Collision with bottom is counted as game over
         if (!ball.collideWithWall(screenX, screenY)) {
             lives--;
-            if(lives == 0) {
+            if (lives == 0) {
                 playing = false;
                 isGameOver = true;
             }
@@ -212,13 +209,12 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(screenX / 15);
                 paint.setTextAlign(Paint.Align.CENTER);
-                if(score == num_bricks){
+                if (score == num_bricks) {
                     paint.setColor(Color.GREEN);
-                    canvas.drawText("Congratulations!", screenX/2, 4*screenY/10, paint);
-                    canvas.drawText("You have cleared", screenX/2, 5*screenY/10, paint);
-                    canvas.drawText("all bricks", screenX/2, 6*screenY/10, paint);
-                }
-                else {
+                    canvas.drawText("Congratulations!", screenX / 2, 4 * screenY / 10, paint);
+                    canvas.drawText("You have cleared", screenX / 2, 5 * screenY / 10, paint);
+                    canvas.drawText("all bricks", screenX / 2, 6 * screenY / 10, paint);
+                } else {
                     canvas.drawText("Game over!", screenX / 2, 6 * screenY / 10, paint);
                     canvas.drawText("Score: " + score, screenX / 2, 7 * screenY / 10, paint);
                 }
@@ -245,9 +241,11 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void resume() {
-        playing = true;
-        gameThread = new Thread(this);
-        gameThread.start();
+        if (!isGameOver) {
+            playing = true;
+            gameThread = new Thread(this);
+            gameThread.start();
+        }
     }
 
     @Override
@@ -255,7 +253,7 @@ public class GameView extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                if(!isGameOver) {
+                if (!isGameOver) {
                     this.resume();
                     float paddleMid = (paddle.getRectF().left + paddle.getRectF().right) / 2;
                     if (motionEvent.getX() > paddleMid) {
