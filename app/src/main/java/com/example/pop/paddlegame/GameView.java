@@ -147,7 +147,6 @@ public class GameView extends SurfaceView implements Runnable {
             }
             paddle.reset();
             ball.reset(paddle);
-            this.pause();
         }
     }
 
