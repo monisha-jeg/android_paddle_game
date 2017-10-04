@@ -9,6 +9,9 @@ import android.graphics.Color;
 import java.util.Random;
 
 public class Ball extends GameObject {
+
+    int constSpeedX;
+    int constSpeedY;
     /**
      * Constructor for the ball object
      *
@@ -18,16 +21,21 @@ public class Ball extends GameObject {
         super(radius, radius, Color.argb(255, 255, 127, 0));
 
         // Start the ball travelling left or right randomly
-        Random generator = new Random();
-        if (generator.nextInt(2) == 0) {
-            speedX = screenWidth / 6;
-        } else speedX = -screenWidth / 5;
-        speedY = -screenHeight / 5;
+        constSpeedX = screenWidth / 6;
+        constSpeedY = -screenHeight / 5;
 
         // set ball position on top of paddle
         this.reset(paddle);
     }
 
+    public void setSpeed(){
+        Random generator = new Random();
+        if (generator.nextInt(2) == 0) {
+            speedX = constSpeedX;
+        }
+        else speedX = -1 * constSpeedX;
+        speedY = constSpeedY;
+    }
     public void reverseSpeedY() {
         speedY = -speedY;
     }
@@ -44,6 +52,9 @@ public class Ball extends GameObject {
     public void reset(Paddle paddle) {
         float left = (paddle.getRectF().left + paddle.getRectF().right) / 2 - objWidth / 2;
         float bottom = paddle.getRectF().top;
+
+        speedX = 0;
+        speedY = 0;
 
         // Placing the ball at the top of the paddle
         setRectF(left, bottom - objHeight);
@@ -91,10 +102,13 @@ public class Ball extends GameObject {
     public boolean collideWithWall(int screenX, int screenY) {
         if (this.getRectF().left <= 0) {
             this.reverseSpeedX();
+            this.setRectF(0, this.getRectF().top);
         } else if (this.getRectF().right >= screenX) {
             this.reverseSpeedX();
+            this.setRectF(screenX - objWidth, this.getRectF().top);
         } else if (this.getRectF().top <= 0) {
             this.reverseSpeedY();
+            this.setRectF(this.getRectF().left, 0);
         } else if (this.getRectF().bottom >= screenY) {
             // ball has fallen down, so game is over
             return false;

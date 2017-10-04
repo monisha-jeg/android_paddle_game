@@ -9,21 +9,29 @@ public class Paddle extends GameObject {
     int rightLimit;
     int speedMax;
 
+    float constLeft;
+    float constTop;
+
     public Paddle(int screenWidth, int screenHeight) {
         super(screenHeight / 50, screenWidth / 8, Color.argb(255, 0, 180, 0));
 
         // Placing paddle with left side in the middle of the screen
-        float left = screenWidth / 2 - objWidth / 2;
-        float top = screenHeight - screenHeight / 45;
-        setRectF(left, top);
+        constLeft = screenWidth / 2 - objWidth / 2;
+        constTop = screenHeight - screenHeight / 45;
+
+        reset();
 
         // setting speeds and movement
-        speedX = 0;
         speedY = 0;
         speedMax = 2 * screenWidth / 9;
 
         // setting limit on right side movement
         rightLimit = screenWidth;
+    }
+
+    public void reset(){
+        setRectF(constLeft, constTop);
+        speedX = 0;
     }
 
     public void movePaddle(int direction) {

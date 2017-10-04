@@ -23,6 +23,7 @@ public class GameView extends SurfaceView implements Runnable {
     volatile boolean playing;
     private Thread gameThread = null;
     boolean isGameOver = false;
+    boolean isBallPaused = true;
     int score = 0;
     int lives = 3;
 
@@ -147,6 +148,7 @@ public class GameView extends SurfaceView implements Runnable {
             }
             paddle.reset();
             ball.reset(paddle);
+            isBallPaused = true;
         }
     }
 
@@ -253,7 +255,10 @@ public class GameView extends SurfaceView implements Runnable {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
                 if (!isGameOver) {
-                    this.resume();
+                    if(isBallPaused) {
+                        ball.setSpeed();
+                        isBallPaused = false;
+                    }
                     float paddleMid = (paddle.getRectF().left + paddle.getRectF().right) / 2;
                     if (motionEvent.getX() > paddleMid) {
                         paddle.movePaddle(1);
