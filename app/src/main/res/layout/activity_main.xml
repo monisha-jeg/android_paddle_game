@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e3daad"
+    android:background="#000000"
     tools:context="com.example.pop.paddlegame.MainActivity">
 
 
@@ -24,6 +24,7 @@
         android:fontFamily="casual"
         android:text="To move the paddle, touch appropriate side of the screen. Tap screen once to start game."
         android:textAlignment="center"
+        android:textColor="#ffffff"
         android:textSize="24sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/buttonPlay"
