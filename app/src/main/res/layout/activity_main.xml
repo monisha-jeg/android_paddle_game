@@ -22,7 +22,7 @@
         android:layout_height="87dp"
         android:layout_marginBottom="-50dp"
         android:fontFamily="casual"
-        android:text="To move the paddle, touch appropriate side of the screen. Tap screen once to start game."
+        android:text="To move the paddle, touch appropriate side of the screen. Tap screen once to release ball."
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:textSize="24sp"

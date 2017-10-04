@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -23,6 +25,8 @@ public class GameActivity extends AppCompatActivity {
 
         gameView = new GameView(this, size.x, size.y);
         setContentView(gameView);
+
+
     }
 
     @Override

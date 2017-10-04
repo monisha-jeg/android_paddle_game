@@ -7,6 +7,9 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,9 @@ public class GameView extends SurfaceView implements Runnable {
     Ball ball;
     int ballRadius;
 
+    LinearLayout layout;
+    TextView textView;
+
     public GameView(Context context, int screenX, int screenY) {
         super(context);
         isGameOver = false;
@@ -65,7 +71,43 @@ public class GameView extends SurfaceView implements Runnable {
         ball = new Ball(paddle, ballRadius, screenX, screenY);
 
         createBricksAndRestart();
+
+        layout = new LinearLayout(context);
+
+        textView = new TextView(context);
+        textView.setVisibility(View.VISIBLE);
+        textView.setText("BACK TO MENU");
+        textView.setTextColor(Color.parseColor("#000000"));
+        textView.setBackgroundColor((Color.parseColor(("#FDA3A3"))));
+        textView.setX(3 * screenX/8);
+        textView.setTextSize(25);
+        textView.setY(8 * screenY/10);
+        textView.setClickable(true);
+        layout.setClickable(true);
+
+        textView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                textView.setBackgroundColor((Color.parseColor(("#ffffff"))));
+                System.exit(0);
+            }
+        });
+
+        layout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                textView.setBackgroundColor((Color.parseColor(("#ffffff"))));
+                System.exit(0);
+            }
+        });
+
+
+        layout.addView(textView);
+
     }
+
 
     public void createBricksAndRestart() {
 
@@ -97,6 +139,9 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
         }
+
+
+
 
         // Reset ball position
         ball.reset(paddle);
@@ -183,6 +228,12 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
 
+
+
+            layout.measure(canvas.getWidth(), canvas.getHeight());
+            layout.layout(0, 0, canvas.getWidth(), canvas.getHeight());
+
+
             // Draw the paddle
             paint.setColor(paddle.color);
             canvas.drawRect(paddle.getRectF(), paint);
@@ -210,6 +261,8 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(screenX / 15);
                 paint.setTextAlign(Paint.Align.CENTER);
+                layout.draw(canvas);
+
                 if (score == num_bricks) {
                     paint.setColor(Color.GREEN);
                     canvas.drawText("Congratulations!", screenX / 2, 4 * screenY / 10, paint);
