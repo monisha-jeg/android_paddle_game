@@ -11,16 +11,17 @@ public class Brick extends GameObject {
     // using this variable to not display after ball has touched a brick
     private boolean isVisible;
 
-    public Brick(int row, int column, int width, int height, int color) {
+    public Brick(int row, int column, int width, int height, int color, int screenWidth, int screenHeight) {
         super(height, width, color);
         isVisible = true;
 
-        int padding = width/25;
+        int paddingX = screenWidth / 250;
+        int paddingY = screenHeight / 200;
 
-        rectF = new RectF(column * width + padding,
-                row * height + padding,
-                column * width + width - padding,
-                row * height + height - padding);
+        rectF = new RectF(column * width + paddingX,
+                row * height + paddingY,
+                column * width + width - paddingX,
+                row * height + height - paddingY);
     }
 
     public void setInvisible() {

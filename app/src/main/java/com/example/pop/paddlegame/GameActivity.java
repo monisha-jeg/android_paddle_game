@@ -1,7 +1,6 @@
 package com.example.pop.paddlegame;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +39,10 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         this.onPause();
+        if (gameView.isGameOver) {
+            GameActivity.super.onBackPressed();
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to quit?")
                 .setCancelable(false)
@@ -59,6 +62,4 @@ public class GameActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-
 }

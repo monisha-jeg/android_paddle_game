@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonPlay"
-        android:background="@drawable/playbutton"
+        android:background="@drawable/play_button"
         android:layout_centerHorizontal="true"
         tools:ignore="ContentDescription"
         app:layout_constraintRight_toRightOf="parent"

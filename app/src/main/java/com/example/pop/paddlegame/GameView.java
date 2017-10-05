@@ -69,7 +69,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void createBricksAndRestart() {
 
-        int brickWidth1 = screenX / numberBricks1, brickWidth2 = screenX / numberBricks2;
+        int brickWidth;
         int brickHeight = screenY / 13;
 
         Random random = new Random();
@@ -85,14 +85,16 @@ public class GameView extends SurfaceView implements Runnable {
         for (int row = 1; row <= numberRows; row++) {
             if (row % 2 == 0) {
                 for (int column = 0; column < numberBricks1; column++) {
+                    brickWidth = screenX / numberBricks1;
                     int color = random.nextInt(2);
-                    bricks[num_bricks] = new Brick(row, column, brickWidth1, brickHeight, colors.get(color));
+                    bricks[num_bricks] = new Brick(row, column, brickWidth, brickHeight, colors.get(color), screenX, screenY);
                     num_bricks++;
                 }
             } else {
                 for (int column = 0; column < numberBricks2; column++) {
+                    brickWidth = screenX / numberBricks2;
                     int color = 2 + random.nextInt(2);
-                    bricks[num_bricks] = new Brick(row, column, brickWidth2, brickHeight, colors.get(color));
+                    bricks[num_bricks] = new Brick(row, column, brickWidth, brickHeight, colors.get(color), screenX, screenY);
                     num_bricks++;
                 }
             }
