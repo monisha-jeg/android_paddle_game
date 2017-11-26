@@ -21,7 +21,7 @@ public class Ball extends GameObject {
         super(radius, radius, Color.argb(255, 255, 127, 0));
 
         // Start the ball travelling left or right randomly
-        constSpeedX = screenWidth / 6;
+        constSpeedX = -screenWidth / 6;
         constSpeedY = -screenHeight / 5;
 
         // set ball position on top of paddle
@@ -101,11 +101,13 @@ public class Ball extends GameObject {
      */
     public boolean collideWithWall(int screenX, int screenY) {
         if (this.getRectF().left <= 0) {
-            this.reverseSpeedX();
-            this.setRectF(0, this.getRectF().top);
+            return false;
+            // this.reverseSpeedX();
+            // this.setRectF(0, this.getRectF().top);
         } else if (this.getRectF().right >= screenX) {
-            this.reverseSpeedX();
-            this.setRectF(screenX - objWidth, this.getRectF().top);
+            return false;
+            //this.reverseSpeedX();
+            //this.setRectF(screenX - objWidth, this.getRectF().top);
         } else if (this.getRectF().top <= 0) {
             this.reverseSpeedY();
             this.setRectF(this.getRectF().left, 0);

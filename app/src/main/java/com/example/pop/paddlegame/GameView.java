@@ -56,12 +56,12 @@ public class GameView extends SurfaceView implements Runnable {
 
         numberBricks1 = 7 + random.nextInt(6);
         numberBricks2 = 7 + random.nextInt(6);
-        numberRows = 4 + random.nextInt(2);
+        numberRows = 2;
 
         ourHolder = getHolder();
         paint = new Paint();
         paddle = new Paddle(screenX, screenY);
-        ballRadius = screenX / 70;
+        ballRadius = screenX / 35;
         ball = new Ball(paddle, ballRadius, screenX, screenY);
 
         createBricksAndRestart();
